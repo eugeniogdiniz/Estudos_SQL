@@ -1,0 +1,112 @@
+
+CREATE TABLE tb_EDITORA (
+                cod_editora VARCHAR(10) NOT NULL,
+                telefone_1 VARCHAR(14) NOT NULL,
+                telefone_2 VARCHAR(14),
+                email VARCHAR(50) NOT NULL,
+                nome_contato VARCHAR(50) NOT NULL,
+                CONSTRAINT tb_EDITORA_pk PRIMARY KEY (cod_editora)
+)
+
+CREATE TABLE tb_LIVRO (
+                cod_livro VARCHAR(10) NOT NULL,
+                valor DECIMAL NOT NULL,
+                ano_publicacao INT NOT NULL,
+                categoria VARCHAR(25) NOT NULL,
+                titulo VARCHAR(50) NOT NULL,
+                nome_livro VARCHAR(50) NOT NULL,
+                isbn INT NOT NULL,
+                autor VARCHAR(50) NOT NULL,
+                cod_editora VARCHAR(10) NOT NULL,
+                CONSTRAINT tb_LIVRO_pk PRIMARY KEY (cod_livro)
+)
+
+CREATE TABLE tb_ESTOQUE (
+                cod_livro VARCHAR(10) NOT NULL,
+                qtd_estoque INT NOT NULL,
+                CONSTRAINT tb_ESTOQUE_pk PRIMARY KEY (cod_livro)
+)
+
+CREATE TABLE tb_CLIENTE (
+                cod_cliente VARCHAR(20) NOT NULL,
+                telefone_1 VARCHAR(14),
+                email VARCHAR,
+                rua VARCHAR NOT NULL,
+                bairro VARCHAR(20) NOT NULL,
+                cidade VARCHAR(50) NOT NULL,
+                telefone_2 VARCHAR(14),
+                nome VARCHAR NOT NULL,
+                CONSTRAINT tb_CLIENTE_pk PRIMARY KEY (cod_cliente)
+)
+
+CREATE TABLE tb_PESSOA_JURIDICA (
+                cod_cliente VARCHAR(20) NOT NULL,
+                cnpj VARCHAR(20) NOT NULL,
+                ie VARCHAR(20) NOT NULL,
+                CONSTRAINT tb_PESSOA_JURIDICA_pk PRIMARY KEY (cod_cliente)
+)
+
+CREATE TABLE tb_PESSOA_FISICA (
+                cod_cliente VARCHAR(20) NOT NULL,
+                cpf VARCHAR NOT NULL,
+                rg VARCHAR(15) NOT NULL,
+                CONSTRAINT tb_PESSOA_FISICA_pk PRIMARY KEY (cod_cliente)
+)
+
+CREATE TABLE tb_PEDIDO (
+                cod_pedido VARCHAR(10) NOT NULL,
+                data DATETIME NOT NULL,
+                valor_pedido DECIMAL NOT NULL,
+                cod_cliente VARCHAR(20) NOT NULL,
+                CONSTRAINT tb_PEDIDO_pk PRIMARY KEY (cod_pedido)
+)
+
+CREATE TABLE tb_ITEM_PEDIDO (
+                cod_pedido VARCHAR(10) NOT NULL,
+                cod_livro VARCHAR(10) NOT NULL,
+                qtd_pedido INT NOT NULL,
+                valor_item DECIMAL NOT NULL,
+                CONSTRAINT tb_ITEM_PEDIDO_pk PRIMARY KEY (cod_pedido, cod_livro)
+)
+
+ALTER TABLE tb_LIVRO ADD CONSTRAINT tb_EDITORA_tb_LIVRO_fk
+FOREIGN KEY (cod_editora)
+REFERENCES tb_EDITORA (cod_editora)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+
+ALTER TABLE tb_ITEM_PEDIDO ADD CONSTRAINT tb_LIVRO_tb_ITEM_PEDIDO_fk
+FOREIGN KEY (cod_livro)
+REFERENCES tb_LIVRO (cod_livro)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+
+ALTER TABLE tb_ESTOQUE ADD CONSTRAINT tb_LIVRO_tb_ESTOQUE_fk
+FOREIGN KEY (cod_livro)
+REFERENCES tb_LIVRO (cod_livro)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+
+ALTER TABLE tb_PEDIDO ADD CONSTRAINT tb_CLIENTE_tb_PEDIDO_fk
+FOREIGN KEY (cod_cliente)
+REFERENCES tb_CLIENTE (cod_cliente)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+
+ALTER TABLE tb_PESSOA_FISICA ADD CONSTRAINT tb_CLIENTE_tb_PESSOA_FISICA_fk
+FOREIGN KEY (cod_cliente)
+REFERENCES tb_CLIENTE (cod_cliente)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+
+ALTER TABLE tb_PESSOA_JURIDICA ADD CONSTRAINT tb_CLIENTE_tb_PESSOA_JURIDICA_fk
+FOREIGN KEY (cod_cliente)
+REFERENCES tb_CLIENTE (cod_cliente)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+
+ALTER TABLE tb_ITEM_PEDIDO ADD CONSTRAINT tb_PEDIDO_tb_ITEM_PEDIDO_fk
+FOREIGN KEY (cod_pedido)
+REFERENCES tb_PEDIDO (cod_pedido)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
